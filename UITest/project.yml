@@ -1,0 +1,37 @@
+name: UITest
+options:
+  bundleIdPrefix: ge.space.imessagecollectormac
+  deploymentTarget:
+    macOS: "14.0"
+# Signed with the user's Apple Development certificate: iMessageCollectorMac passes
+# DEVELOPMENT_TEAM and -allowProvisioningUpdates when it builds. A stable
+# signing identity keeps the test runner's Accessibility permission across
+# rebuilds (an ad-hoc signature would have to be allowed again every time).
+settings:
+  CODE_SIGN_STYLE: Automatic
+targets:
+  Host:
+    type: application
+    platform: macOS
+    sources: [Host]
+    info:
+      path: Host/Info.plist
+      properties:
+        LSUIElement: true
+  iMessageCollectorMacUITests:
+    type: bundle.ui-testing
+    platform: macOS
+    sources: [UITests]
+    dependencies:
+      - target: Host
+    settings:
+      TEST_TARGET_NAME: Host
+      GENERATE_INFOPLIST_FILE: YES
+schemes:
+  UITest:
+    build:
+      targets:
+        Host: all
+        iMessageCollectorMacUITests: [test]
+    test:
+      targets: [iMessageCollectorMacUITests]
